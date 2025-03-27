@@ -122,6 +122,34 @@ async function removeFriendship(userId1, userId2) {
     });
 }
 
+// Check if userId and friendId are confirmed friends
+async function isFriend(userId, friendId) {
+    const friendship = await prisma.friend.findFirst({
+        where: {
+            userId,
+            friendId,
+            status: "accepted",
+        },
+    });
+
+    return !!friendship; // Return true if exists, false otherwise
+}
+
+// Get all confirmed friend IDs of the user
+async function getFriendIds(userId) {
+    const friends = await prisma.friend.findMany({
+        where: {
+            userId,
+            status: "accepted",
+        },
+        select: {
+            friendId: true,
+        },
+    });
+
+    return friends.map(f => f.friendId);
+}
+
 
 module.exports = {
     modifyUserInfo,
@@ -133,5 +161,7 @@ module.exports = {
     getFriendRequests,
     acceptFriendRequest,
     getFriends,
-    removeFriendship
+    removeFriendship,
+    isFriend,
+    getFriendIds,
 };

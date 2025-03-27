@@ -24,7 +24,7 @@ async function getCompetitionInfo(competitionId) {
 
 // Retrieve top 50 participants
 async function getTopParticipants(competitionId) {
-    return await competitionDb.getTopParticipants(competitionId);
+    return competitionDb.getTopParticipants(competitionId);
 }
 
 // Join a competition

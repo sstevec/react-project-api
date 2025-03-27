@@ -3,11 +3,21 @@ const prisma = new PrismaClient();
 
 // Create a new user
 async function createUser(name, email, password, gender, dateOfBirth, weight) {
+    // Check if email already exists
+    const existingUser = await prisma.user.findUnique({
+        where: { email },
+    });
+
+    if (existingUser) {
+        throw new Error("Email already exists.");
+    }
+
+    // Proceed with user creation
     return prisma.user.create({
         data: {
             name,
             email,
-            password: password,
+            password,
             gender,
             dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
             weight,
